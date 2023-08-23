@@ -17,6 +17,21 @@ app.get('/notes', (req,res) =>
     res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
+app.get('/api/notes/:id', (req, res) => {
+    const noteId = (req.params.id).toLowerCase();
+    readFromFile('./db/db.json')
+        .then((data) => {
+            let noteData = JSON.parse(data);
+            const activeNote = noteData.find((activeNote) => note.id === noteId);
+
+            if (activeNote) {
+                res.json(activeNote);
+            } else {
+                res.status(404).json({error: 'Note not found'});
+            }
+        })
+})
+
 app.get('/api/notes', (req, res) => 
     readFromFile('./db/db.json')
     .then((data) => res.json(JSON.parse(data))
@@ -30,7 +45,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
-            note_id: uuid(),
+            id: uuid(),
         };
 
         readAndAppend(newNote, './db/db.json');
