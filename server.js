@@ -4,7 +4,6 @@ const express = require('express');
 // Creates an instance of express in the app variable
 const app = express();
 
-// 
 const PORT = process.env.PORT || 3001;
 const api = require('./routes/index');
 
