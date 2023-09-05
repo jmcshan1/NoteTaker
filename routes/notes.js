@@ -32,22 +32,28 @@ notes.get('/:id', (req, res) => {
         })
 })
 
+// Sends back all the data in the database as a json
 notes.get('/', (req, res) => 
     readFromFile('./db/db.json')
     .then((data) => res.json(JSON.parse(data))
     ));
 
+// Route that adds the user inputted note into the database 
 notes.post('/', (req, res) => {
     console.info(`${req.method} request received to add a note.`);
+    // Destructures the title and text of the note the user sends in the post request
     const { title, text } = req.body;
 
+    // Checks if the title and text of the note are defined 
     if(title && text) {
         const newNote = {
             title,
             text,
+            // Creates a random id associated with each note
             id: uuid(),
         };
 
+        // Appends the note the user saved into the database
         readAndAppend(newNote, './db/db.json');
 
         const response = {
@@ -56,9 +62,11 @@ notes.post('/', (req, res) => {
         };
 
         console.log(response);
+        // Sends a successful response status if the note has been added
         res.status(201).json(response);
 
     }   else {
+        // Sends a server side error if either the title or text is undefined
         res.status(500).json('Error in posting review');
     }
 });
